@@ -1,2 +1,1 @@
-# hrsync
-HR Management System
+hrsync
