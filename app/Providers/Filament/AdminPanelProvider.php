@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('app')
             ->path('')
             ->login()
+            ->brandLogo(asset('images/logo.svg'))
 
             ->profile(EditProfile::class)
             ->registration(Register::class)

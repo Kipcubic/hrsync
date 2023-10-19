@@ -3,12 +3,15 @@
 @config './tailwind.config.js';
 
 @layer components{
-.fi-layout{
-    @apply mx-auto max-w-7xl absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10;
-}
 
-.fi-fo-tabs-tab{
-@apply p-0 !important;
+
+    .fi-topbar {
+        @apply shadow-sm bg-white;
+    }
+
+
+.fi-topbar nav {
+    @apply flex mx-auto max-w-7xl h-16 items-center gap-x-4  px-4 ring-0  dark:bg-gray-900 dark:ring-white/10 md:px-6 lg:px-8;
 }
 
 }
