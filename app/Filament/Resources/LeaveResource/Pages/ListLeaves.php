@@ -10,10 +10,12 @@ class ListLeaves extends ListRecords
 {
     protected static string $resource = LeaveResource::class;
 
+    protected ?string $heading = 'Leave Applications';
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->label('Apply Leave'),
         ];
     }
 }

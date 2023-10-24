@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(HolidaySeeder::class);
         $this->call(DocumentTypeSeeder::class);
         $this->call(ShiftSeeder::class);
+        $this->call(LeaveTypeSeeder::class);
 
         \App\Models\User::factory(2500)->create();
 

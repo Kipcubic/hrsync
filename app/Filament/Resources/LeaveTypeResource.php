@@ -67,7 +67,11 @@ class LeaveTypeResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('name'),
+                TextColumn::make('gender'),
+                TextColumn::make('max_days_year'),
+                TextColumn::make('max_negative_balance'),
+                ToggleColumn::make('attachment')->label('Mandatory Attachment'),
             ])
             ->filters([
                 //
