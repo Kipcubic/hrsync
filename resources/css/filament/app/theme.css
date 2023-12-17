@@ -6,7 +6,7 @@
 
 
     .fi-topbar {
-        @apply shadow-sm bg-white;
+        @apply shadow-sm bg-white dark:bg-gray-900;
     }
 
 

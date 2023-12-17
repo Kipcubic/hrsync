@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -32,32 +33,48 @@ class LeaveTypeResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')->label('Leave Type Name')->required()->unique(ignoreRecord:true),
+
+
+                Select::make('employment_type_id')->label('Employment Type')->relationship(name:'employmenttype',titleAttribute:'name')->createOptionForm([
+                    TextInput::make('name')
+                ])->searchable()->preload()->multiple(),
+
+
                 Select::make('gender')->options([
                     'all'=>'All',
                     'male'=>'Male',
                     'female'=>'Female'
                 ]),
-                Select::make('days_accrued')->label('Days to Accrue:')->options([
+
+                TextInput::make('max_days_year')->label('Maximum No. of Days in A year'),
+
+
+                // TextInput::make('max_negative_balance')->label('Maximum Negative Balance'),
+                Toggle::make('attachment')->label('Mandatory Attachment')->columnStart(1),
+
+
+                Section::make('Is the leave type accrues?')
+                ->schema([
+                    Toggle::make('accrues')->label('The days accrues')->columnStart(1),
+
+
+                ]),
+
+                    Select::make('days_accrued')->label('Days to Accrue:')->options([
                     'monthly'=>'Monthly',
                     'yearly'=>'Yearly'
-                ]),
-                TextInput::make('max_days_year')->label('Maximum No. of Days in A year'),
-                TextInput::make('max_days_carried'),
+                ])->hidden(fn (Get $get): bool => ! $get('accrues')),
                 Select::make('accrual_registered_at')->options([
                     'year_start'=>'Start of the Year',
                     'contract_start'=>'Start of the Contract'
-                ])->required(),
-
-                Select::make('employment_type_id')->label('Employment Type')->relationship(name:'employmenttype',titleAttribute:'name')->createOptionForm([
-                    TextInput::make('name')
-                ])->searchable()->preload()->multiple(),
-                TextInput::make('max_negative_balance')->label('Maximum Negative Balance'),
-                Toggle::make('attachment')->label('Mandatory Attachment'),
+                ])->required()->hidden(fn (Get $get): bool => ! $get('accrues')),
 
                 Section::make('When Calculating Leave Days')
                 ->schema([
-                    Checkbox::make('off_days')->label('Exclude Employees Off-days')->columnSpan(4),
+                    Checkbox::make('off_days')->label('Exclude Employees Off-days')->columnSpan(2),
                     Checkbox::make('holidays')->label('Exclude Holidays'),
+                    Checkbox::make('weekends')->label('Include Weekends')->columnSpan(2),
+
                 ]),
 
             ])->columns(4);

@@ -3,11 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LeaveResource\Pages;
-use App\Filament\Resources\LeaveResource\RelationManagers;
 use App\Models\Leave;
 use App\Models\LeaveType;
 use DateTime;
-use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
@@ -21,15 +19,17 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
+
 
 class LeaveResource extends Resource
 {
     protected static ?string $model = Leave::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bars-3-bottom-right';
+    // protected static ?string $navigationIcon = 'heroicon-o-bars-3-bottom-right';
+
+
+    protected static ?string $navigationGroup = 'Leave';
+
 
 
     public static function form(Form $form): Form
@@ -63,14 +63,23 @@ class LeaveResource extends Resource
                 TextColumn::make('leavetype.name')->label('Leave Type')->searchable(),
                 TextColumn::make('start_date'),
                 TextColumn::make('end_date'),
-                TextColumn::make('status'),
+                TextColumn::make('Duration'),
+                TextColumn::make('created_at')->label('Applied')->since(),
+                TextColumn::make('status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    '0' => 'danger',
+                    'reviewing' => 'warning',
+                    'published' => 'success',
+                    'rejected' => 'danger',
+                }),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 // Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()
 
             ])
             ->bulkActions([

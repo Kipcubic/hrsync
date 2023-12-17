@@ -18,8 +18,8 @@ class UserFactory extends Factory
     {
         return [
             'staff_number'=>'TR#'.fake()->unique()->randomNumber(),
-            'first_name' => fake()->unique()->firstName(),
-            'middle_name' => fake()->unique()->name(),
+            'first_name' => fake()->firstName(),
+            'middle_name' => fake()->name(),
             'last_name' => fake()->lastName(),
             'national_id'=>fake()->unique()->randomNumber(8,true),
             'mobile_number'=>'07'.fake()->unique()->randomNumber(8,true),

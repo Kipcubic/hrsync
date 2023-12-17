@@ -23,7 +23,8 @@ return new class extends Migration
             $table->boolean('attachment');
             $table->boolean('off_days');
             $table->boolean('holidays');
-
+            $table->boolean('weekends');
+            $table->boolean('accrues');
             $table->timestamps();
         });
     }

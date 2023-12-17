@@ -42,9 +42,6 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->databaseNotifications()
 
-
-
-
             ->colors([
                 'primary' => Color::Emerald,
             ])
@@ -59,12 +56,24 @@ class AdminPanelProvider extends PanelProvider
                 // Widgets\AccountWidget::class,
             ])
 
+
+              // Leave navigation
+              ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Leave')
+                    ->icon('heroicon-o-rectangle-stack'),
+
+            ])
+
             ->navigationGroups([
                 NavigationGroup::make()
                      ->label('Settings')
                      ->icon('heroicon-o-cog-6-tooth'),
 
             ])
+
+
+
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

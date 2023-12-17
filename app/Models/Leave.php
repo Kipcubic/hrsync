@@ -20,4 +20,7 @@ class Leave extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+
+    // create a method to calculate duration based on leave type params
 }
