@@ -52,14 +52,11 @@ class LeaveTypeResource extends Resource
                 // TextInput::make('max_negative_balance')->label('Maximum Negative Balance'),
                 Toggle::make('attachment')->label('Mandatory Attachment')->columnStart(1),
 
-
                 Section::make('Is the leave type accrues?')
                 ->schema([
                     Toggle::make('accrues')->label('The days accrues')->columnStart(1),
 
-
                 ]),
-
                     Select::make('days_accrued')->label('Days to Accrue:')->options([
                     'monthly'=>'Monthly',
                     'yearly'=>'Yearly'

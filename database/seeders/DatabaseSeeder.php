@@ -13,12 +13,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-
         $this->call(BankSeeder::class);
         $this->call(DepartmentSeeder::class);
         $this->call(EmploymentTypeSeeder::class);
@@ -28,8 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LeaveTypeSeeder::class);
 
         \App\Models\User::factory(10000)->create();
-
-
 
     }
 }

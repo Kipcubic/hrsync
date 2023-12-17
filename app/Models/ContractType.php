@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmploymentType extends Model
+class ContractType extends Model
 {
+    protected $fillable=['id','name','accrual_days'];
+
     use HasFactory;
-
-    protected $fillable=['name','accrual_days'];
-
 }

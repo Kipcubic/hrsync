@@ -13,17 +13,18 @@ class EmploymentTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        // Define the employment types you want to seed
-        $employmentTypes = [
-            'Permanent',
-            'Contractual',
-        ];
+       // Define the employment types along with their accrual_days
+       $employmentTypes = [
+        'Permanent' => 2,  // Adjust the accrual_days as needed
+        'Contractual' => 1.75,  // Adjust the accrual_days as needed
+    ];
 
-        // Loop through the employment types and create records in the database
-        foreach ($employmentTypes as $type) {
-            EmploymentType::create([
-                'name' => $type,
-            ]);
-        }
+    // Loop through the employment types and create records in the database
+    foreach ($employmentTypes as $type => $accrualDays) {
+        EmploymentType::create([
+            'name' => $type,
+            'accrual_days' => $accrualDays,
+        ]);
+    }
     }
 }

@@ -3,17 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmploymentTypeResource\Pages;
-use App\Filament\Resources\EmploymentTypeResource\RelationManagers;
 use App\Models\EmploymentType;
-use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class EmploymentTypeResource extends Resource
 {
@@ -25,9 +22,8 @@ class EmploymentTypeResource extends Resource
     {
         return $form
             ->schema([
-                //
-
-                TextInput::make('name')
+                TextInput::make('name'),
+                TextInput::make('accrual_days')
             ]);
     }
 
@@ -35,7 +31,8 @@ class EmploymentTypeResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('name'),
+                TextColumn::make('accrual_days')->label('Days to Accrue (Monthly)')
             ])
             ->filters([
                 //

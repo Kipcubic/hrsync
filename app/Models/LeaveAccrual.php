@@ -11,4 +11,9 @@ class LeaveAccrual extends Model
 
 
     protected $fillable = ['user_id', 'accrual_date', 'leave_days'];
+
+    // user
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

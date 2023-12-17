@@ -101,4 +101,12 @@ class User extends Authenticatable implements FilamentUser,HasName
     {
         return $this->attributes['first_name'] . ' ' . $this->attributes['last_name'];
     }
+
+    public function contract(){
+        return $this->hasMany(Contract::class);
+    }
+
+    public function leaveAccruals(){
+        return $this->hasMany(LeaveAccrual::class);
+    }
 }

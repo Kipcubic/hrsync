@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('employment_types', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->float('accrual_days',8,2)->default(0);
             $table->timestamps();
         });
     }

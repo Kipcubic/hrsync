@@ -7,6 +7,7 @@ use App\Models\LeaveAccrual;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 
@@ -36,7 +37,9 @@ class LeaveAccrualResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('user.name')->label('Name')->searchable(['first_name','last_name']),
+                TextColumn::make('accrual_date'),
+                TextColumn::make('leave_days')->sortable()
             ])
             ->filters([
                 //
