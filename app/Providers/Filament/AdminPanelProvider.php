@@ -61,7 +61,7 @@ class AdminPanelProvider extends PanelProvider
               ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Leave')
-                    ->icon('heroicon-o-rectangle-stack'),
+                    ->icon('heroicon-o-square-2-stack'),
 
             ])
 

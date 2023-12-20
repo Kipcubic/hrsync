@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\LeaveAccrual;
+use App\Models\LeaveDay;
 use App\Models\LeaveType;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -24,9 +25,7 @@ class AccrueLeaveDays extends Command
 
                 $leaveType = LeaveType::where('name', 'Annual Leave')->first();
 
-                if($leaveType->employmenttype()->contain([$employmentType->id])){
 
-                }
                 // Find the leave type you want to accrue (e.g., Annual Leave)
 
 
@@ -37,7 +36,7 @@ class AccrueLeaveDays extends Command
 
                 if (!$lastAccrual) {
                     // Create a new accrual record
-                    $accrualDays = $contractType->accrual_days ?? 0; // Default to 0 if not set
+                    $accrualDays = $employmentType->accrual_days ?? 0; // Default to 0 if not set
                     $accrual = new LeaveAccrual([
                         'user_id' => $user->id,
                         'accrual_date' => $accrualDate,
@@ -45,6 +44,8 @@ class AccrueLeaveDays extends Command
                     ]);
 
                     $accrual->save();
+                    LeaveDay::incrementLeaveDays($user, $accrualDays);
+
                 } else {
                     $this->info("Already accrued days for user {$user->id}.");
                 }

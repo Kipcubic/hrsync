@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ShiftSeeder::class);
         $this->call(LeaveTypeSeeder::class);
 
-        \App\Models\User::factory(10000)->create();
+        \App\Models\User::factory(2000)->create();
 
     }
 }

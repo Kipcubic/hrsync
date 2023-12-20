@@ -18,6 +18,7 @@ class LeaveAccrualResource extends Resource
     // protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Leave';
+    protected static ?int $navigationSort = 2;
 
 
     public static function canCreate(): bool
@@ -37,7 +38,9 @@ class LeaveAccrualResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('user.staff_number')->label('Staff Number'),
                 TextColumn::make('user.name')->label('Name')->searchable(['first_name','last_name']),
+                TextColumn::make('user.department.name')->label('Department'),
                 TextColumn::make('accrual_date'),
                 TextColumn::make('leave_days')->sortable()
             ])

@@ -106,7 +106,31 @@ class User extends Authenticatable implements FilamentUser,HasName
         return $this->hasMany(Contract::class);
     }
 
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
+    }
     public function leaveAccruals(){
         return $this->hasMany(LeaveAccrual::class);
     }
+
+    public function leavedays()
+    {
+        return $this->hasMany(LeaveDay::class);
+    }
+
+    public function getLeaveDaysAttribute()
+    {
+        return $this->leavedays()->where('year', date('Y'))->sum('days');
+    }
+
+    public function leavedaystaken(){
+        return $this->leaves()->where('status','approved')->where('leave_type_id',1)->sum('duration');
+    }
+
+    public function getleavebalanceAttribute(){
+        return $this->leave_days-$this->leavedaystaken();
+    }
+
+
 }
