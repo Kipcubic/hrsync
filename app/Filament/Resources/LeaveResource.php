@@ -7,10 +7,14 @@ use App\Models\Department;
 use App\Models\Leave;
 use App\Models\LeaveType;
 use App\Models\User;
+use Closure;
+
 use DateTime;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -26,9 +30,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Enums\FiltersLayout;
-
-
-
+use Illuminate\Validation\Rules\Unique;
 
 class LeaveResource extends Resource
 {
@@ -47,15 +49,43 @@ class LeaveResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('leave_type_id')->relationship(name: 'leavetype', titleAttribute: 'name')->label('Leave Type')->live(),
+
+
+                Fieldset::make('You have '.auth()->user()->leave_balance.' Annual leave days')
+                ->schema([
+                    Select::make('leave_type_id')->relationship(name: 'leavetype', titleAttribute: 'name')->label('Leave Type')->live()->required()->columns(2),
+                ])
+                ->columns(3),
+
+                // Fieldset::make('Leave Period')
+                //     ->schema([
+                //         DatePicker::make('start_date'),
+                //         DatePicker::make('end_date')->afterOrEqual('start_date')->live()->afterStateUpdated(fn (Get $get, Set $set, ?string $state) => $set('duration', (new DateTime($get('end_date')))->diff(new DateTime($get('start_date')))->days + 1)),
+                //         TextInput::make('duration')->disabled()->label('Duration (days)')->lte('leave_balance'),
+                //     ])->columns(4),
+
                 Fieldset::make('Leave Period')
-                    ->schema([
-                        DatePicker::make('start_date'),
-                        DatePicker::make('end_date')->afterOrEqual('start_date')->live()->afterStateUpdated(fn (Get $get, Set $set, ?string $state) => $set('duration', (new DateTime($get('end_date')))->diff(new DateTime($get('start_date')))->days + 1)),
+                ->schema([
+                    DatePicker::make('start_date'),
+                    DatePicker::make('end_date')
+                        ->afterOrEqual('start_date')
+                        ->live()
+                        ->afterStateUpdated(fn (Get $get, Set $set, ?string $state) => $set('duration', (new DateTime($get('end_date')))->diff(new DateTime($get('start_date')))->days + 1)),
+                    TextInput::make('duration')
+                        ->disabled()
+                        ->label('Duration (days)')
+                        ->rules([
+                            fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                if ($get('leave_type_id') == 1 && $value > $get('leave_balance')) {
+                                    $fail("The duration selected exceeds your leave balance.");
+                                }else if($get('leave_type_id') == 4 && $value >$get('max_days_year') ){
+                                    $fail("The duration selected exceeds your entitled partenity leave");
+                                }
 
-                        TextInput::make('duration')->disabled()->label('Duration (days)'),
-
-                    ])->columns(4),
+                                //add other leave types
+                            },
+                        ])
+                ])->columns(4),
 
                 Textarea::make('comments')->label('Comment (Optional)')->columnSpan(2),
                 FileUpload::make('attachment')->columnStart(1)->hidden(function (Get $get): bool {
@@ -69,6 +99,7 @@ class LeaveResource extends Resource
     {
         return $table
             ->columns([
+
                 TextColumn::make('user.name')->label('Name'),
                 TextColumn::make('leavetype.name')->label('Leave Type')->searchable(),
                 TextColumn::make('start_date'),
@@ -98,34 +129,7 @@ class LeaveResource extends Resource
                     ->relationship('leavetype', 'name'),
 
 
-            // Filter by department
 
-
-
-                // Select by date
-                // Filter::make('created_at')
-                //     ->form([
-                //         DatePicker::make('created_from'),
-                //         DatePicker::make('created_until'),
-                //     ])
-                //     ->query(function (Builder $query, array $data): Builder {
-                //         return $query
-                //             ->when(
-                //                 $data['created_from'],
-                //                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                //             )
-                //             ->when(
-                //                 $data['created_until'],
-                //                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                //             );
-                //     }),
-                    // SelectFilter::make('News')
-                    // ->options([
-                    //     '0' => 'Pending',
-                    //     '1' => 'Approved',
-                    //     '2' => 'Withdrawn',
-                    //     '3' => 'Rejected',
-                    // ]),
 
                 ],layout:FiltersLayout::AboveContent)
             ->actions([

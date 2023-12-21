@@ -124,6 +124,12 @@ class User extends Authenticatable implements FilamentUser,HasName
         return $this->leavedays()->where('year', date('Y'))->sum('days');
     }
 
+    // leave liability
+    public function getLeaveLiabilityAttribute()
+    {
+        return ($this->leave_balance)*($this->basic_salary*12/365);
+    }
+
     public function leavedaystaken(){
         return $this->leaves()->where('status','approved')->where('leave_type_id',1)->sum('duration');
     }

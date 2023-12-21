@@ -5,9 +5,9 @@ namespace App\Livewire;
 use App\Models\User;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Tables\Columns\Summarizers\Average;
-use Filament\Tables\Columns\Summarizers\Range;
-use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -15,7 +15,9 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Livewire\Component;
-use Illuminate\Database\Query\Builder;
+
+use Filament\Tables\SummarizesRecords;
+use Illuminate\Support\Facades\DB;
 
 class LeaveLiabilities extends Component implements HasForms, HasTable
 {
@@ -33,23 +35,38 @@ class LeaveLiabilities extends Component implements HasForms, HasTable
                 TextColumn::make('department.name'),
                 TextColumn::make('leave_balance')->label('Leave Balance (days) '),
                 TextColumn::make('liability')
-                ->state(function (User $user): float {
-                    return (($user->basic_salary * 12)/365)*$user->leave_balance;
-                })->money('KES'),
+                    ->state(function (User $user): float {
+                        return (($user->basic_salary * 12) / 365) * $user->leave_balance;
+                    })->money('KES'),
 
 
-TextColumn::make('created_at')->label('From Date')
-    ->dateTime()
-    ->summarize(Range::make()->minimalDateTimeDifference())
             ])
+
             ->filters([
 
-                 // Select by  department
-                  // Filter by Leave Type
+              // Select by creation date
+               Filter::make('created_at')
+               ->form([
+                   DatePicker::make('created_from')->label('From'),
+                   DatePicker::make('created_until')->label('To'),
+               ])->columns()
+               ->query(function (Builder $query, array $data): Builder {
+                   return $query
+                       ->when(
+                           $data['created_from'],
+                           fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                       )
+                       ->when(
+                           $data['created_until'],
+                           fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                       );
+               }),
+                // Select by  department
                 SelectFilter::make('department')
-                ->relationship('department', 'name'),
+                    ->relationship('department', 'name'),
 
-            ],layout:FiltersLayout::AboveContent)
+
+            ], layout: FiltersLayout::AboveContent)->filtersFormColumns(3)
             ->actions([
                 // ...
             ])

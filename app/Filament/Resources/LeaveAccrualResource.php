@@ -8,6 +8,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 
@@ -41,11 +42,13 @@ class LeaveAccrualResource extends Resource
                 TextColumn::make('user.staff_number')->label('Staff Number'),
                 TextColumn::make('user.name')->label('Name')->searchable(['first_name','last_name']),
                 TextColumn::make('user.department.name')->label('Department'),
-                TextColumn::make('accrual_date'),
+                TextColumn::make('accrual_date')->sortable(),
                 TextColumn::make('leave_days')->sortable()
             ])
             ->filters([
-                //
+            //    // Select by  department
+            //    SelectFilter::make('department')
+            //    ->relationship('department', 'name'),
             ])
             ->actions([
                 // Tables\Actions\EditAction::make(),
