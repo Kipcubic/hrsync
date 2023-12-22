@@ -138,5 +138,10 @@ class User extends Authenticatable implements FilamentUser,HasName
         return $this->leave_days-$this->leavedaystaken();
     }
 
+    // shift
+    public function shifts()
+    {
+        return $this->belongsToMany(Shift::class);
+    }
 
 }

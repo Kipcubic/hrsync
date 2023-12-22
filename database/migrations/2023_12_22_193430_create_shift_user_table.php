@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shifts', function (Blueprint $table) {
+        Schema::create('shift_user', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
-            $table->boolean('flexible')->default(false);
-            $table->string('description')->nullable();
-            $table->boolean('active')->default('false');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('shift_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('added_by_user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shifts');
+        Schema::dropIfExists('shift_user');
     }
 };

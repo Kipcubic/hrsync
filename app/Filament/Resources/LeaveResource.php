@@ -70,7 +70,36 @@ class LeaveResource extends Resource
                     DatePicker::make('end_date')
                         ->afterOrEqual('start_date')
                         ->live()
-                        ->afterStateUpdated(fn (Get $get, Set $set, ?string $state) => $set('duration', (new DateTime($get('end_date')))->diff(new DateTime($get('start_date')))->days + 1)),
+                    //     ->afterStateUpdated(fn (Get $get, Set $set, ?string $state) => $set('duration',
+                    //     (new DateTime($get('end_date')))->diff(new DateTime($get('start_date')))->days + 1)
+                    // ),
+                    ->afterStateUpdated(function (Get $get, Set $set, ?string $state) use ($form) {
+                        $startDate = new DateTime($get('start_date'));
+                        $endDate = new DateTime($get('end_date'));
+
+                        $daysDifference = $endDate->diff($startDate)->days + 1;
+
+                        // Check employment type
+                        $employmentType = optional(auth()->user())->employment_type_id;
+
+                        // Count only weekdays for permanent employment type
+                        if ($employmentType == 1) {
+                            $weekdays = 0;
+
+                            for ($i = 0; $i < $daysDifference; $i++) {
+                                $currentDate = $startDate->modify('+1 day');
+
+                                if ($currentDate->format('N') < 6) {
+                                    $weekdays++;
+                                }
+                            }
+
+                            $set('duration', $weekdays);
+                        } else {
+                            // Count all days for contractual employment type
+                            $set('duration', $daysDifference);
+                        }
+                    }),
                     TextInput::make('duration')
                         ->disabled()
                         ->label('Duration (days)')
@@ -79,7 +108,7 @@ class LeaveResource extends Resource
                                 if ($get('leave_type_id') == 1 && $value > $get('leave_balance')) {
                                     $fail("The duration selected exceeds your leave balance.");
                                 }else if($get('leave_type_id') == 4 && $value >$get('max_days_year') ){
-                                    $fail("The duration selected exceeds your entitled partenity leave");
+                                    $fail("The duration selected exceeds your entitled partenity leave. Adjust the dates");
                                 }
 
                                 //add other leave types

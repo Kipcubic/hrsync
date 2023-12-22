@@ -33,6 +33,7 @@ class ShiftResource extends Resource
                     TimePicker::make('start_time'),
                     TimePicker::make('end_time'),
                 ])->columns(4)->hidden(fn (Get $get)=>$get('flexible')==true),
+                Toggle::make('active')->label('Is Active?')
 
             ]);
     }
