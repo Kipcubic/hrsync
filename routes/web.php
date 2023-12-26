@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\GeneratePayroll;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +18,6 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/get', function(){
-    return "hello";
-});
+
+
+

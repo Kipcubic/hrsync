@@ -219,6 +219,7 @@ class LeaveResource extends Resource
         return [
             'index' => Pages\ListLeaves::route('/'),
             'create' => Pages\CreateLeave::route('/create'),
+            'view' => Pages\ViewLeave::route('/{record}/view'),
             'edit' => Pages\EditLeave::route('/{record}/edit'),
         ];
     }

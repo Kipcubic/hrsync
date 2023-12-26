@@ -18,6 +18,4 @@ class CreatePayroll extends CreateRecord
     protected static bool $canCreateAnother = false;
 
 
-
-
 }
